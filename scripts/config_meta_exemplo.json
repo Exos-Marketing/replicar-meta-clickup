@@ -1,0 +1,28 @@
+{
+  "workspace": "9013012202",
+  "target": {
+    "suffix": "[DM][LB][POS][JUL][26]"
+  },
+  "phase_map": {
+    "Concepção":   {"dst": "901302376636"},
+    "Setup":       {"dst": "901302376637"},
+    "Captação":    {"dst": "901302378944"},
+    "Aquecimento": {"dst": "901302378939"},
+    "Evento":      {"dst": "901302376639"},
+    "Lançamento":  {"dst": "901302376640"},
+    "Pós Venda":   {"dst": "901302376641"},
+    "Downsell":    {"dst": "901310974062"}
+  },
+  "goal": {
+    "enabled": true,
+    "source_goal": "23",
+    "folder_name": "Daniela Moleiro",
+    "name": "[DM][LB][POS][JUL][26]",
+    "description": "Planejamento Estratégico: ",
+    "color": "#757380",
+    "due_date": "2026-07-31",
+    "owners": [54927970],
+    "link": "milestones",
+    "only_phases_with_tasks": true
+  }
+}
