@@ -13,6 +13,7 @@ Um gestor de projetos sênior especializado na criação de metas (Goals) no Cli
 - **Progresso calculado automaticamente** — pela conclusão dos marcos via ClickUp Goals
 - **Nomeia a meta pelo sufixo do projeto** — seguindo a nomenclatura padrão da Exos
 - **Pasta de Goals do cliente** — cria a meta dentro da pasta correta; migra da raiz se a pasta for criada depois (idempotente)
+- **Suporta cross-workspace** — a meta-modelo pode estar num workspace e a meta nova nascer em outro (ex.: workspace do cliente)
 - **API-first** — Goals não estão no MCP; tudo via REST API direta
 - **Idempotente** — pula meta/KR que já existem pelo nome; dry-run por padrão
 
@@ -66,6 +67,8 @@ Reutiliza o mesmo `config_<projeto>.json` da skill `duplicar-projeto-clickup`. B
   "only_phases_with_tasks": true
 }
 ```
+
+**Entre workspaces:** `source.workspace` diz onde está a meta-modelo e `target.workspace` (ou `goal.workspace`) onde a meta nasce. Sem eles, tudo roda no workspace da Exos (`9013012202`).
 
 ## Estrutura do repositório
 

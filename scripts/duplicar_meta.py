@@ -24,7 +24,12 @@ Uso:
 import os, sys, json, time, argparse, datetime, urllib.request, urllib.error
 
 TOKEN = os.environ.get("CLICKUP_TOKEN", "")
-WS = "9013012202"
+WS = "9013012202"  # default; sobrescrito por config/plan (set_ws) p/ operar cross-workspace
+
+def set_ws(w):
+    """Troca o workspace global usado pelos helpers de Goals (team_goals, folder, goal, KR, URL)."""
+    global WS
+    if w: WS = str(w)
 
 def api(method, path, body=None, tries=5):
     data = json.dumps(body).encode() if body is not None else None
@@ -158,6 +163,11 @@ def discover(cfg):
     link = gc.get("link", "milestones")
     only_pop = gc.get("only_phases_with_tasks", True)
 
+    # workspaces: source (resolve o modelo) vs target (cria meta/pasta/KRs).
+    tgt_ws = tgt.get("workspace") or gc.get("workspace") or cfg.get("workspace") or WS
+    src_ws = cfg.get("source", {}).get("workspace") or tgt_ws
+
+    set_ws(src_ws)
     src_goal = resolve_source_goal(gc["source_goal"])
     src_info = None
     if src_goal:
@@ -168,6 +178,8 @@ def discover(cfg):
               f"({len(src_info['kr_names'])} KRs): {src_info['kr_names']}", file=sys.stderr)
     else:
         print(f"[aviso] meta-modelo '{gc.get('source_goal')}' nao encontrada (sigo com o padrao 1 KR/fase)", file=sys.stderr)
+
+    set_ws(tgt_ws)  # daqui em diante tudo eh no workspace destino
 
     krs = []
     for phase, m in cfg["phase_map"].items():
@@ -182,7 +194,8 @@ def discover(cfg):
     due_iso = gc.get("due_date") or default_due_from_suffix(suffix)
 
     plan = {
-        "workspace": WS,
+        "workspace": tgt_ws,
+        "source_workspace": src_ws,
         "source_model": src_info,
         "folder": {"name": folder_name, "id": folder_id},
         "goal": {
@@ -199,6 +212,7 @@ def discover(cfg):
 
 # ---------- execute ----------
 def execute(plan, apply):
+    set_ws(plan.get("workspace") or WS)  # meta/pasta/KRs/URL no workspace gravado no plano
     g = plan["goal"]; fld = plan.get("folder") or {}
     folder_id = fld.get("id")
     folder_name = fld.get("name")
